@@ -50,7 +50,7 @@ class LLMService:
             return QueryGenerationPlan(
                 needs_neo4j=False,
                 reason="LLM configuration is missing.",
-                warnings=["z.ai GLM configuration is missing."],
+                warnings=["OpenAI-compatible LLM configuration is missing."],
             )
 
         prompt_messages = [
@@ -92,8 +92,8 @@ class LLMService:
     ) -> str:
         if not self.is_configured:
             return (
-                "z.ai GLM configuration is missing. Set ZAI_API_KEY and optionally ZAI_MODEL, "
-                "or use the generic LLM_* variables."
+                "OpenAI-compatible LLM configuration is missing. "
+                "Set LLM_BASE_URL, LLM_API_KEY, and LLM_MODEL."
             )
 
         prompt_messages = self._build_answer_prompt_messages(
@@ -115,8 +115,8 @@ class LLMService:
     ) -> AsyncIterator[str]:
         if not self.is_configured:
             yield (
-                "z.ai GLM configuration is missing. Set ZAI_API_KEY and optionally ZAI_MODEL, "
-                "or use the generic LLM_* variables."
+                "OpenAI-compatible LLM configuration is missing. "
+                "Set LLM_BASE_URL, LLM_API_KEY, and LLM_MODEL."
             )
             return
 

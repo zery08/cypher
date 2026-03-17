@@ -45,10 +45,10 @@ class ChatOrchestrator:
                 graph=graph_payload,
             )
         except Exception as exc:
-            warnings = [*query_trace.warnings, f"z.ai answer generation failed: {exc}"]
+            warnings = [*query_trace.warnings, f"LLM answer generation failed: {exc}"]
             assistant_message = (
-                "Neo4j 조회 또는 컨텍스트 준비는 되었지만 최종 z.ai GLM 응답 생성이 실패했습니다. "
-                "API 키, 모델명, 사용량 한도 또는 z.ai 계정 권한을 확인해 주세요."
+                "Neo4j 조회 또는 컨텍스트 준비는 되었지만 최종 LLM 응답 생성이 실패했습니다. "
+                "OpenAI-compatible endpoint, API 키, 모델명, 사용량 한도를 확인해 주세요."
             )
             query_trace = QueryTraceDTO(
                 used_neo4j=query_trace.used_neo4j,
@@ -95,7 +95,7 @@ class ChatOrchestrator:
             ):
                 yield {"type": "delta", "content": chunk}
         except Exception as exc:
-            warnings = [*query_trace.warnings, f"z.ai answer generation failed: {exc}"]
+            warnings = [*query_trace.warnings, f"LLM answer generation failed: {exc}"]
             query_trace = QueryTraceDTO(
                 used_neo4j=query_trace.used_neo4j,
                 cypher=query_trace.cypher,
@@ -110,8 +110,8 @@ class ChatOrchestrator:
             yield {
                 "type": "delta",
                 "content": (
-                    "Neo4j 조회 또는 컨텍스트 준비는 되었지만 최종 z.ai GLM 응답 생성이 실패했습니다. "
-                    "API 키, 모델명, 사용량 한도 또는 z.ai 계정 권한을 확인해 주세요."
+                    "Neo4j 조회 또는 컨텍스트 준비는 되었지만 최종 LLM 응답 생성이 실패했습니다. "
+                    "OpenAI-compatible endpoint, API 키, 모델명, 사용량 한도를 확인해 주세요."
                 ),
             }
 
@@ -131,18 +131,18 @@ class ChatOrchestrator:
                 schema=schema,
             )
         except Exception as exc:
-            warning = f"z.ai query-planning failed: {exc}"
+            warning = f"LLM query-planning failed: {exc}"
             query_trace = QueryTraceDTO(
                 used_neo4j=False,
-                explanation="z.ai query planning failed.",
+                explanation="LLM query planning failed.",
                 warnings=[warning] + ([schema_warning] if schema_warning else []),
             )
             return (
                 query_trace,
                 None,
                 None,
-                "채팅 요청을 처리하는 중 z.ai GLM 호출이 실패했습니다. "
-                "API 키, 모델명, 사용량 한도 또는 계정 권한 상태를 확인해 주세요.",
+                "채팅 요청을 처리하는 중 LLM 호출이 실패했습니다. "
+                "OpenAI-compatible endpoint, API 키, 모델명, 사용량 한도 또는 계정 권한 상태를 확인해 주세요.",
             )
 
         warnings = list(plan.warnings)

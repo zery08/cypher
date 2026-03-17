@@ -122,5 +122,5 @@ async def test_orchestrator_returns_friendly_message_when_llm_plan_fails():
 
     assert response.graph is None
     assert response.query_trace.used_neo4j is False
-    assert "z.ai" in response.assistant_message
+    assert "LLM" in response.assistant_message
     assert any("invalid_api_key" in warning for warning in response.query_trace.warnings)

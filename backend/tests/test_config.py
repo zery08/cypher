@@ -19,29 +19,38 @@ def test_cors_origins_accepts_comma_separated_string():
     assert settings.cors_origins == ["http://localhost:5173", "https://example.com"]
 
 
-def test_settings_accept_zai_env_aliases(monkeypatch):
-    monkeypatch.setenv("ZAI_API_KEY", "zai-test-key")
-    monkeypatch.setenv("ZAI_MODEL", "glm-4.7")
+def test_settings_accept_generic_llm_env(monkeypatch):
+    monkeypatch.setenv("LLM_BASE_URL", "https://example.com/v1")
+    monkeypatch.setenv("LLM_API_KEY", "generic-test-key")
+    monkeypatch.setenv("LLM_MODEL", "test-model")
     settings = Settings(_env_file=None)
 
-    assert settings.llm_api_key == "zai-test-key"
-    assert settings.llm_model == "glm-4.7"
+    assert settings.llm_base_url == "https://example.com/v1"
+    assert settings.llm_api_key == "generic-test-key"
+    assert settings.llm_model == "test-model"
 
 
-def test_settings_still_accept_openai_compat_aliases(monkeypatch):
+def test_settings_still_accept_provider_aliases(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "compat-test-key")
     monkeypatch.setenv("OPENAI_MODEL", "glm-4.7")
+    monkeypatch.setenv("OPENAI_BASE_URL", "https://provider.example/v1")
     settings = Settings(_env_file=None)
 
+    assert settings.llm_base_url == "https://provider.example/v1"
     assert settings.llm_api_key == "compat-test-key"
     assert settings.llm_model == "glm-4.7"
 
 
 def test_settings_uses_backend_env_file_from_any_cwd(tmp_path, monkeypatch):
     env_file = tmp_path / ".env"
-    env_file.write_text("ZAI_API_KEY=test-key\n", encoding="utf-8")
+    env_file.write_text(
+        "LLM_BASE_URL=https://example.com/v1\nLLM_API_KEY=test-key\nLLM_MODEL=test-model\n",
+        encoding="utf-8",
+    )
     monkeypatch.chdir(tmp_path)
 
     settings = Settings(_env_file=env_file)
 
+    assert settings.llm_base_url == "https://example.com/v1"
     assert settings.llm_api_key == "test-key"
+    assert settings.llm_model == "test-model"

@@ -28,30 +28,30 @@ class Settings(BaseSettings):
     schema_cache_ttl_seconds: int = 60
 
     llm_base_url: str = Field(
-        default="https://api.z.ai/api/paas/v4",
+        default="",
         validation_alias=AliasChoices(
             "LLM_BASE_URL",
+            "OPENAI_BASE_URL",
             "ZAI_BASE_URL",
             "GEMINI_BASE_URL",
-            "OPENAI_BASE_URL",
         ),
     )
     llm_api_key: str = Field(
         default="",
         validation_alias=AliasChoices(
             "LLM_API_KEY",
+            "OPENAI_API_KEY",
             "ZAI_API_KEY",
             "GEMINI_API_KEY",
-            "OPENAI_API_KEY",
         ),
     )
     llm_model: str = Field(
-        default="glm-4.7",
+        default="",
         validation_alias=AliasChoices(
             "LLM_MODEL",
+            "OPENAI_MODEL",
             "ZAI_MODEL",
             "GEMINI_MODEL",
-            "OPENAI_MODEL",
         ),
     )
 
